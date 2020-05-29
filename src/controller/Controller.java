@@ -361,7 +361,6 @@ public class Controller {
 		}
 		else if(pintar!=null)
 		{
-			//System.out.println("pero que doble hps!!!");
 			Graph<Integer,VertexInfo,Double> ausar=g;
 			Iterator<Integer> it = pintar.keys();
 			String[]colores= {"#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", 
@@ -408,7 +407,7 @@ public class Controller {
 					}
 					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
 				}
-				final int constante=800;
+				final int constante=250;
 				double radio=(ccomparendos*100*constante)/comparendos.getSize();
 
 				CircleOptions settingsCircle=new CircleOptions();
