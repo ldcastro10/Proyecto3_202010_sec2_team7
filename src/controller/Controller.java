@@ -273,7 +273,9 @@ public class Controller {
 				System.out.println("-----------------------------------------------------------------------");
 				System.out.println("-----------------------------------------------------------------------");
 				long start6 = System.currentTimeMillis();
-				PoliceStationComponents();
+				System.out.println("Por favor digite el valor de M");
+				int m6 = lector.nextInt();
+				PoliceStationComponents(m6);
 				long end6 = System.currentTimeMillis();
 				System.out.println("el tiempo que toma al algoritmo encontrar la respuesta y dibujar el camino"
 						+ "es: " + (end6-start6));
@@ -303,7 +305,7 @@ public class Controller {
 
 
 
-	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar )
+	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar, int m )
 	{
 		//System.out.println("cual es el sapo hp problema");
 		Mapa2 example = new Mapa2(titulo);
@@ -401,11 +403,15 @@ public class Controller {
 					{
 						estacion=estaciones.get(v1.getPoliceStation());
 					}
-					if(v2.getPoliceStation()!=-1)
+					else if(v2.getPoliceStation()!=-1)
 					{
 						estacion=estaciones.get(v2.getPoliceStation());
 					}
-					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
+					if(ccomparendos<=m)
+					{
+						example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
+					}
+					ccomparendos+=v1.getInfractions().getSize()+v2.getInfractions().getSize();
 				}
 				final int constante=250;
 				double radio=(ccomparendos*100*constante)/comparendos.getSize();
@@ -445,7 +451,7 @@ public class Controller {
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
 		System.out.println("terminando de calcular el camino optimo");
 		System.out.println("tamanio de arcos "+ paint.getSize());
-		generarMapa("Req 1A",paint,null,null);
+		generarMapa("Req 1A",paint,null,null,0);
 
 
 	}
@@ -467,7 +473,7 @@ public class Controller {
 		if(caminos.distance(idVertice2) == Double.POSITIVE_INFINITY)return;
 		System.out.println("calculando el camino optimo");
 		ORArray<Edge<Double>> paint = caminos.journey(idVertice2);
-		generarMapa("Req 1B",paint,null,null);
+		generarMapa("Req 1B",paint,null,null,0);
 
 		System.out.println("terminando de calcular el camino optimo");
 		System.out.println("tamanio de arcos "+ paint.getSize());
@@ -555,7 +561,7 @@ public class Controller {
 			send.addEdge(g.translateInverse(from), g.translateInverse(to), ed.getInfo());
 		}
 		System.out.println("Terminando de crear el nuevo arbol para apintar");
-		generarMapa("Arbol mayor comparendos",null,send,null);
+		generarMapa("Arbol mayor comparendos",null,send,null,0);
 	}
 
 
@@ -603,7 +609,7 @@ public class Controller {
 		}
 		System.out.println("Terminando de crear el nuevo arbol para apintar");
 
-		generarMapa("Arbol mayor Gravedad",null,send,null);
+		generarMapa("Arbol mayor Gravedad",null,send,null,0);
 		//System.out.println("el tamanio del grafo en nodos " + aPintar.getSize());
 
 	}
@@ -644,7 +650,7 @@ public class Controller {
 		}
 		System.out.println("terminando de crear el arreglo de distancia minimas");
 		System.out.println("El costo de este camino que conecta el grafo es: "+ costo);
-		generarMapa("Caminos cortos policía",aPintar,null,null);
+		generarMapa("Caminos cortos policía",aPintar,null,null,0);
 
 	}
 
@@ -652,10 +658,10 @@ public class Controller {
 	 * Method that prints the connected components of infractions and police stations
 	 * This is done by allocating the infractions to the closest
 	 */
-	public void PoliceStationComponents() {
-		System.out.println("asignando a cada estacion de policia los comparendos más cercanos");
+	public void PoliceStationComponents(int m) {
+		System.out.println("asignando a cada estacion de policia a los "+m+ " comparendos más cercanos");
 		Dijkstra caminos = new Dijkstra(this.grafo,nodosConEstaciones,false);
-		System.out.println("finalizando de asignar a cada estacion de policia los comparendos más cercanos");
+		System.out.println("finalizando de asignar a cada estacion de policia a los "+m+" comparendos más cercanos");
 		System.out.println("empezando a generar grafo de distancia minimas");
 		Graph<Integer,VertexInfo,Double> G = caminos.generateGraph();
 		System.out.println("tamanio del grafo vertices "+ G.V() + " edges "+ G.E());
@@ -695,7 +701,7 @@ public class Controller {
 		System.out.println("Empezando a generar los componentes conectados");
 		HashTableSC<Integer,ORArray<Edge<Double>>> pintar = Graph.ConnectedComponent(grafoPintar);
 		System.out.println("Terminando de generar los componentes conectados");
-		generarMapa("Componentes estación de policía",null,grafoPintar,pintar);
+		generarMapa("Componentes estación de policía",null,grafoPintar,pintar,m);
 
 	}
 
