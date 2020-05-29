@@ -408,7 +408,7 @@ public class Controller {
 					}
 					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
 				}
-				final int constante=50;
+				final int constante=800;
 				double radio=(ccomparendos*100*constante)/comparendos.getSize();
 
 				CircleOptions settingsCircle=new CircleOptions();
