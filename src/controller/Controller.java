@@ -287,7 +287,7 @@ public class Controller {
 
 	}
 
-	
+
 	public int closest(Coordinates val) {
 		Iterator<Integer> it = grafo.vertices();
 		int who = -1;
@@ -300,14 +300,14 @@ public class Controller {
 		}
 		return who;
 	}
-	
-	
-	
+
+
+
 	public void generarMapa(String titulo,ORArray<Edge<Double>> paint,Graph<Integer,VertexInfo,Double> g,HashTableSC<Integer,ORArray<Edge<Double>>> pintar )
 	{
 		//System.out.println("cual es el sapo hp problema");
 		Mapa2 example = new Mapa2(titulo);
-		
+
 
 		if(paint!=null)
 		{
@@ -369,26 +369,20 @@ public class Controller {
 					"#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", 
 					"#ffd8b1", "#000075", "#808080", "#ffffff", "#000000"};
 			for(int color = 1; it.hasNext();++color) {
-				
+
+				PoliceStation estacion=null;
+				int ccomparendos=0;
 				ORArray<Edge<Double>> thro =  pintar.get(it.next());
 
-				final int constante=40000;
-				double radio=(thro.getSize()*2*constante)/grafo.V();
-				
-				CircleOptions settingsCircle=new CircleOptions();
-				settingsCircle.setFillColor(colores[color-1]);
-				settingsCircle.setRadius(radio);
-				settingsCircle.setFillOpacity(0.35);
-				settingsCircle.setStrokeColor(colores[color-1]);
+
 
 				PolylineOptions settingsLine=new PolylineOptions();
 				settingsLine.setGeodesic(true);
 				settingsLine.setStrokeColor(colores[color-1]);
 				settingsLine.setStrokeOpacity(1.0);
 				settingsLine.setStrokeWeight(2.0);
-				
-				
-				example.setSettingsCircle(settingsCircle);
+
+
 				example.setSettingsLine(settingsLine);
 
 				for(Edge<Double> edg:  thro) {
@@ -403,21 +397,28 @@ public class Controller {
 					double lon1 = onee.lon;
 					double lat2 = twoo.lat;
 					double lon2 = twoo.lon;
-
+					ccomparendos+=v1.getInfractions().getSize()+v2.getInfractions().getSize();
 					if(v1.getPoliceStation()!=-1)
 					{
-						PoliceStation estacion=estaciones.get(v1.getPoliceStation());
-						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
-						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
+						estacion=estaciones.get(v1.getPoliceStation());
 					}
 					if(v2.getPoliceStation()!=-1)
 					{
-						PoliceStation estacion=estaciones.get(v2.getPoliceStation());
-						example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
-						example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
+						estacion=estaciones.get(v2.getPoliceStation());
 					}
 					example.generateSimplePath(new LatLng(lat1,lon1), new LatLng(lat2,lon2), false);	
 				}
+				final int constante=50;
+				double radio=(ccomparendos*100*constante)/comparendos.getSize();
+
+				CircleOptions settingsCircle=new CircleOptions();
+				settingsCircle.setFillColor(colores[color-1]);
+				settingsCircle.setRadius(radio);
+				settingsCircle.setFillOpacity(0.35);
+				settingsCircle.setStrokeColor(colores[color-1]);
+				example.setSettingsCircle(settingsCircle);
+				example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
+				example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
 			}
 		}
 	}
@@ -624,7 +625,7 @@ public class Controller {
 		System.out.println("Terminando de organizar los vertices segun la gravedad de los comparendos");
 		HashTableSC<Integer, Integer> needed = new HashTableSC<Integer, Integer>(200);
 		for(int i = infraccionesNodoGravedad.getSize()-1, j = 0; i > -1 && j < m;--i,++j) {
-		//	System.out.println("id de los nodos "+ infraccionesNodoGravedad.getElement(i).getSecond());
+			//	System.out.println("id de los nodos "+ infraccionesNodoGravedad.getElement(i).getSecond());
 			needed.put(infraccionesNodoGravedad.getElement(i).getSecond(), 1);
 		}
 		System.out.println("Generando los caminos mas cortos");
