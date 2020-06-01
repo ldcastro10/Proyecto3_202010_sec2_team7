@@ -471,6 +471,7 @@ public class Controller {
 				Marker marcador=example.generateMarker(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()));
 				marcador.setIcon(icon);
 				example.generateArea(new LatLng(estacion.getEPOLATITUD(),estacion.getEPOLONGITU()), radio);
+				
 			}
 		}
 	}
